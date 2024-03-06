@@ -14,11 +14,20 @@
         <section class="selected-loc">
             <h2>Location: <span class="loc-name"></span> <span class="loc-rate"></span></h2>
             <h4 class="loc-address"></h4>
+
             <button onclick="app.onCopyLoc()">Copy location</button>
             <button onclick="app.onShareLoc()">Share location</button>
             <input name="loc-copier" />
         </section>
         <form class="form-search" onsubmit="app.onSearchAddress(event)">
+
+            <select class="color-theme" onchange="app.onChangeColorTheme(value)" name="color-theme">
+              <option value="summer">Summer</option>
+              <option value="winter">Winter</option>
+              <option value="fall">Fall</option>
+              <option value="spring">Spring</option>
+            </select>
+
             <input type="text" name="address" placeholder="Search address" />
             <button title="Search">🔍</button>
             <button type="button" title="My Position" onclick="app.onPanToUserPos()" class="btn-user-pos">&nbsp;

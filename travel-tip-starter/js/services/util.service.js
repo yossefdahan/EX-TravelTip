@@ -1,3 +1,5 @@
+const colorDB_KEY = 'colorsDB'
+
 export const utilService = {
     saveToStorage,
     loadFromStorage,
@@ -8,7 +10,9 @@ export const utilService = {
     elapsedTime,
     getColors,
     updateQueryParams,
-    getDistance
+    getDistance,
+    getThemeColors,
+    loadColors
 }
 
 function saveToStorage(key, value) {
@@ -57,13 +61,13 @@ function elapsedTime(pastMs) {
     const now = new Date()
     const secondsPast = Math.round((now - pastMs) / 1000)
 
-    if (secondsPast < 60 * 5) return `just now` 
-    
+    if (secondsPast < 60 * 5) return `just now`
+
     const minutesPast = Math.floor(secondsPast / 60)
-    if (minutesPast < 60) return `last hour` 
+    if (minutesPast < 60) return `last hour`
 
     const hoursPast = Math.floor(minutesPast / 60)
-    if (hoursPast < 24)  return `today` 
+    if (hoursPast < 24) return `today`
 
     return `${Math.floor(hoursPast / 24)} days ago`
 
@@ -71,28 +75,69 @@ function elapsedTime(pastMs) {
 
 function updateQueryParams(queryParamsObj) {
     var queryParams = `?`
-    for (let paramName in queryParamsObj){
+    for (let paramName in queryParamsObj) {
         if (queryParamsObj[paramName] !== undefined) {
             queryParams += `${paramName}=${queryParamsObj[paramName]}&`
         }
     }
-    queryParams = queryParams.substring(0, queryParams.length-1)
+    queryParams = queryParams.substring(0, queryParams.length - 1)
     const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + queryParams
     window.history.pushState({ path: newUrl }, '', newUrl)
 }
 
 function getColors() {
     return ['#F44336',
-    '#FFEBEE',
-    // '#FFCDD2',
-    '#EF9A9A',
-    '#E57373',
-    '#EF5350',
-    '#F44336',
-    '#E53935',
-    '#D32F2F',
-    '#C62828']    
+        '#FFEBEE',
+        // '#FFCDD2',
+        '#EF9A9A',
+        '#E57373',
+        '#EF5350',
+        '#F44336',
+        '#E53935',
+        '#D32F2F',
+        '#C62828']
 }
+
+function getThemeColors(theme) {
+
+        let colors = {}
+
+        switch (theme) {
+            case "summer":
+                colors.bgc1 = "rgb(25, 156, 64)"
+                colors.bgc2 = "rgb(219, 138, 17)"
+                colors.bgc3 = "rgb(25, 156, 64)"
+                break
+            case "winter":
+                colors.bgc1 = "rgb(223, 203, 29)"
+                colors.bgc2 = "rgb(169, 204, 227)"
+                colors.bgc3 = "rgb(123, 186, 200)"
+                break
+            case "fall":
+                colors.bgc1 = "rgb(188, 128, 63)"
+                colors.bgc2 = "rgb(239, 141, 98)"
+                colors.bgc3 = "rgb(158, 86, 46)"
+                break
+            case "spring":
+                colors.bgc1 = "rgb(137, 207, 240)"
+                colors.bgc2 = "rgb(144, 238, 144)"
+                colors.bgc3 = "rgb(255, 182, 193)"
+                break
+        }
+            
+        colors.theme = theme
+
+        saveToStorage(colorDB_KEY, colors.theme)
+
+
+    return colors
+}
+
+function loadColors(){
+   return loadFromStorage(colorDB_KEY)
+
+}
+
 
 
 

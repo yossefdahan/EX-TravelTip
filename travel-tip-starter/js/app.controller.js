@@ -20,11 +20,14 @@ window.app = {
     onSetFilterBy,
     onOpenEditModal,
     onCloseEditModal,
+    onChangeColorTheme
 }
 
 
 function onInit() {
     loadAndRenderLocs()
+    if (utilService.loadColors()) onChangeColorTheme(utilService.loadColors())
+    
 
     mapService.initMap()
         .then(() => {
@@ -39,8 +42,8 @@ function onInit() {
     mapService.getUserPosition().then(pos => {
         gUserPos = pos
     })
-    
-  
+
+
 
 }
 
@@ -48,8 +51,8 @@ function renderLocs(locs) {
     const selectedLocId = getLocIdFromQueryParams()
 
     var strHTML = locs.map(loc => {
-        const {lat,lng} = loc.geo
-        const distance = utilService.getDistance(gUserPos,{lat,lng},'k')
+        const { lat, lng } = loc.geo
+        const distance = utilService.getDistance(gUserPos, { lat, lng }, 'k')
 
         const className = (loc.id === selectedLocId) ? 'active' : ''
         return `
@@ -189,8 +192,8 @@ function onSelectLoc(locId) {
 }
 
 function displayLoc(loc) {
-    const {lat,lng} = loc.geo
-    const distance = utilService.getDistance(gUserPos,{lat,lng},'k')
+    const { lat, lng } = loc.geo
+    const distance = utilService.getDistance(gUserPos, { lat, lng }, 'k')
 
 
     document.querySelector('.loc.active')?.classList?.remove('active')
@@ -345,3 +348,29 @@ function onCloseEditModal() {
 }
 
 
+function onChangeColorTheme(theme) {
+
+    const colors = utilService.getThemeColors(theme)
+
+
+    document.querySelector('.locs-container')
+        .style.setProperty("--bg3", colors.bgc3)
+
+        document.querySelector('body')
+        .style.setProperty("--bg1", colors.bgc1)
+
+        document.querySelector('header')
+        .style.setProperty("--bg2", colors.bgc2)
+
+    document.querySelector('.btn-user-pos')
+        .style.setProperty("--bg2", colors.bgc2)
+
+    document.querySelector('.loc-filter')
+        .style.setProperty("--bg1", colors.bgc1)
+
+    document.querySelector('.selected-loc')
+        .style.setProperty("--bg3", colors.bgc3)
+
+        document.querySelector('.color-theme').value = theme
+
+}
