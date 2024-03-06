@@ -4,6 +4,8 @@ import { mapService } from './services/map.service.js'
 
 window.onload = onInit
 
+var gUserPos
+
 // To make things easier in this project structure 
 // functions that are called from DOM are defined on a global app object
 window.app = {
@@ -18,6 +20,7 @@ window.app = {
     onSetFilterBy,
 }
 
+
 function onInit() {
     loadAndRenderLocs()
 
@@ -30,17 +33,27 @@ function onInit() {
             console.error('OOPs:', err)
             flashMsg('Cannot init map')
         })
+
+    mapService.getUserPosition().then(pos => {
+        gUserPos = pos
+    })
+  
+
 }
 
 function renderLocs(locs) {
     const selectedLocId = getLocIdFromQueryParams()
 
     var strHTML = locs.map(loc => {
+        const {lat,lng} = loc.geo
+        const distance = utilService.getDistance(gUserPos,{lat,lng},'k')
+
         const className = (loc.id === selectedLocId) ? 'active' : ''
         return `
         <li class="loc ${className}" data-id="${loc.id}">
             <h4>  
                 <span>${loc.name}</span>
+                <span>Distance:${distance} KM.</span>
                 <span title="${loc.rate} stars">${'★'.repeat(loc.rate)}</span>
             </h4>
             <p class="muted">
@@ -128,10 +141,12 @@ function loadAndRenderLocs() {
 function onPanToUserPos() {
     mapService.getUserPosition()
         .then(latLng => {
+            gUserPos = latLng
             mapService.panTo({ ...latLng, zoom: 15 })
             unDisplayLoc()
             loadAndRenderLocs()
             flashMsg(`You are at Latitude: ${latLng.lat} Longitude: ${latLng.lng}`)
+
         })
         .catch(err => {
             console.error('OOPs:', err)
@@ -169,6 +184,10 @@ function onSelectLoc(locId) {
 }
 
 function displayLoc(loc) {
+    const {lat,lng} = loc.geo
+    const distance = utilService.getDistance(gUserPos,{lat,lng},'k')
+
+
     document.querySelector('.loc.active')?.classList?.remove('active')
     document.querySelector(`.loc[data-id="${loc.id}"]`).classList.add('active')
 
@@ -176,7 +195,7 @@ function displayLoc(loc) {
     mapService.setMarker(loc)
 
     const el = document.querySelector('.selected-loc')
-    el.querySelector('.loc-name').innerText = loc.name
+    el.querySelector('.loc-name').innerHTML = loc.name + `<br>` + 'Distance:' + distance + 'KM.'
     el.querySelector('.loc-address').innerText = loc.geo.address
     el.querySelector('.loc-rate').innerHTML = '★'.repeat(loc.rate)
     el.querySelector('[name=loc-copier]').value = window.location
@@ -308,3 +327,5 @@ function cleanStats(stats) {
     }, [])
     return cleanedStats
 }
+
+

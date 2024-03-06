@@ -94,6 +94,9 @@ function getColors() {
     '#C62828']    
 }
 
+
+
+
 function getDistance(latLng1, latLng2, unit) {
     if ((latLng1.lat == latLng2.lat) && (latLng1.lng == latLng2.lng)) {
         return 0
