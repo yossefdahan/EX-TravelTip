@@ -49,7 +49,6 @@ function query() {
                 const startIdx = gPageIdx * PAGE_SIZE
                 locs = locs.slice(startIdx, startIdx + PAGE_SIZE)
             }
-            console.log(gSortBy.time);
 
             if (gSortBy.rate !== undefined) {
                 locs.sort((p1, p2) => (p1.rate - p2.rate) * gSortBy.rate)
