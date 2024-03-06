@@ -105,22 +105,22 @@ function getLocCountByRateMap() {
             return locCountByRateMap
         })
 }
-getLocCountByUpdateMap()
-function getLocCountByUpdateMap() {
-    return storageService.query(DB_KEY)
-        .then(locs => {
-            console.log(locs);
-            const locCountByUpdateMap = locs.reduce((map, loc) => {
-                if (loc.updatedAt > new Date()) map.today++
-                else if (loc.update >= 3) map.past++
-                else map.never++
-                console.log(map.today)
-                return map
-            }, { today: 0, past: 0, never: 0 })
-            locCountByUpdateMap.total = locs.length
-            return locCountByUpdateMap
-        })
-}
+// // getLocCountByUpdateMap()
+// function getLocCountByUpdateMap() {
+//     return storageService.query(DB_KEY)
+//         .then(locs => {
+//             console.log(locs);
+//             const locCountByUpdateMap = locs.reduce((map, loc) => {
+//                 if (loc.updatedAt > new Date()) map.today++
+//                 else if (loc.update >= 3) map.past++
+//                 else map.never++
+    
+//                 return map
+//             }, { today: 0, past: 0, never: 0 })
+//             locCountByUpdateMap.total = locs.length
+//             return locCountByUpdateMap
+//         })
+// }
 
 function setSortBy(sortBy = {}) {
     gSortBy = sortBy

@@ -18,6 +18,8 @@ window.app = {
     onShareLoc,
     onSetSortBy,
     onSetFilterBy,
+    onOpenEditModal,
+    onCloseEditModal,
 }
 
 
@@ -37,6 +39,7 @@ function onInit() {
     mapService.getUserPosition().then(pos => {
         gUserPos = pos
     })
+    
   
 
 }
@@ -155,6 +158,8 @@ function onPanToUserPos() {
 }
 
 function onUpdateLoc(locId) {
+    // const elInput = document.querySelector('.loc-edit').value
+
     locService.getById(locId)
         .then(loc => {
             const rate = prompt('New rate?', loc.rate)
@@ -273,9 +278,9 @@ function renderLocStats() {
     locService.getLocCountByRateMap().then(stats => {
         handleStats(stats, 'loc-stats-rate')
     })
-    locService.getLocCountByUpdateMap().then(stats => {
-        handleStats(stats, 'loc-stats-update')
-    })
+    // locService.getLocCountByUpdateMap().then(stats => {
+    //     handleStats(stats, 'loc-stats-update')
+    // })
 }
 
 function handleStats(stats, selector) {
@@ -326,6 +331,17 @@ function cleanStats(stats) {
         return acc
     }, [])
     return cleanedStats
+}
+
+
+function onOpenEditModal() {
+    const elModal = document.querySelector('.loc-edit')
+    elModal.showModal()
+}
+
+function onCloseEditModal() {
+    const elModal = document.querySelector('dialog')
+    elModal.close()
 }
 
 
